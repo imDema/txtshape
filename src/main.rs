@@ -4,41 +4,41 @@ use clap::{App, Arg};
 use asciicode::{Conf,run};
 
 fn main() {
-    let matches = App::new("Asciicode")
-        .about("Create shit ascii code")
+    let matches = App::new("txtshape")
+        .about("Create ascii text art")
         .arg(
             Arg::with_name("ascii")
                 .takes_value(true)
                 .short("a")
                 .long("ascii")
                 .required(true)
-                .help("Ascii art (use whitespace for areas with no code)"),
+                .help("Ascii art (be sure whitespace is used where nothing should be written)"),
         )
         .arg(
-            Arg::with_name("code")
+            Arg::with_name("text")
                 .takes_value(true)
-                .short("c")
-                .long("code")
+                .short("text")
+                .long("text")
                 .required(true)
-                .help("Code source (remove compiler directives and paste them manually)"),
+                .help("Text content"),
         )
         .arg(
             Arg::with_name("output")
                 .required(false)
-                .default_value("asciicode.c"),
+                .default_value("asciicode.out"),
         )
         .get_matches();
     let ascii = matches
         .value_of("ascii")
         .unwrap();
-    let code = matches
-        .value_of("code")
+    let text = matches
+        .value_of("text")
         .unwrap();
     let output = matches
         .value_of("output")
         .unwrap();
 
-    match run(Conf::new(ascii, code, output)) {
+    match run(Conf::new(ascii, text, output)) {
         Ok(()) => (),
         Err(e) => println!("{}", e),
     };
