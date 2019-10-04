@@ -1,5 +1,5 @@
 [package]
-name = "asciicode"
+name = "txtshape"
 version = "0.1.0"
 authors = ["imDema <luca.de.martini@protonmail.com>"]
 edition = "2018"

@@ -1,7 +1,7 @@
 extern crate clap;
 
 use clap::{App, Arg};
-use asciicode::{Conf,run};
+use txtshape::{Conf,run};
 
 fn main() {
     let matches = App::new("txtshape")
