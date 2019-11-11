@@ -1,18 +1,18 @@
 extern crate clap;
 
 use clap::{App, Arg};
-use txtshape::{Conf,run};
+use txtshape::{run, Conf};
 
 fn main() {
     let matches = App::new("txtshape")
-        .about("Create ascii text art")
+        .about("Shape text into ascii art")
         .arg(
-            Arg::with_name("ascii")
+            Arg::with_name("shape")
                 .takes_value(true)
-                .short("a")
-                .long("ascii")
+                .short("s")
+                .long("shape")
                 .required(true)
-                .help("Ascii art (be sure whitespace is used where nothing should be written)"),
+                .help("The shape you want to fit the text in"),
         )
         .arg(
             Arg::with_name("text")
@@ -25,18 +25,12 @@ fn main() {
         .arg(
             Arg::with_name("output")
                 .required(false)
-                .default_value("asciicode.out"),
+                .default_value("txtshape.out"),
         )
         .get_matches();
-    let ascii = matches
-        .value_of("ascii")
-        .unwrap();
-    let text = matches
-        .value_of("text")
-        .unwrap();
-    let output = matches
-        .value_of("output")
-        .unwrap();
+    let ascii = matches.value_of("shape").unwrap();
+    let text = matches.value_of("text").unwrap();
+    let output = matches.value_of("output").unwrap();
 
     match run(Conf::new(ascii, text, output)) {
         Ok(()) => (),
