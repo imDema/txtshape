@@ -1,5 +1,6 @@
 use std::error::Error;
 use std::fs::File;
+use std::str::SplitWhitespace;
 use std::io::{Read, Write};
 use std::iter::{Iterator, Peekable};
 
@@ -70,30 +71,18 @@ pub fn run(cfg: Conf) -> Result<(), Box<dyn Error>> {
 /// The words will be separated by at least one `' '`
 /// and if at least 2 words fit they will be aligned to both the `0` and `n-1` position
 /// with each word being spaced equally +- 1
-fn justify_in(words: &mut Peekable<std::str::SplitWhitespace>, n: usize) -> String {
-    let mut line = Vec::new();
+/// 
+fn justify_in(text_words: &mut Peekable<SplitWhitespace>, n: usize) -> String {
+    let (words, remaining) = fit_words(text_words, n);
 
-    let mut remaining = n;
-    let mut spaces = 0;
-
-    // Put as many words as possible in line and count the necessary spaces
-    while words.peek().is_some() && words.peek().unwrap().len() < remaining - spaces {
-        let w = words.next().unwrap();
-        remaining -= w.len();
-        spaces += 1;
-        line.push(w)
-    }
-
-    // Make remaining and spaces immutable
-    let remaining = remaining;
-    let spaces = if spaces > 0 { spaces - 1 } else { 0 }; // We don't put a space after the last word
-
-    if line.len() > 1 {
+    if words.len() > 1 {
         // With 2 or more words we can justify
+        let spaces = words.len() - 1;
+
         let div = remaining / spaces;
         let rem = remaining % spaces;
 
-        line.into_iter()
+        words.into_iter()
             .enumerate()
             .fold(String::with_capacity(n), |mut s, (i, w)| {
                 if i > 0 {
@@ -104,10 +93,27 @@ fn justify_in(words: &mut Peekable<std::str::SplitWhitespace>, n: usize) -> Stri
             })
     } else {
         // With 0 or 1 words we pad with spaces
-        let mut out = line.get(0).unwrap_or(&"").to_string();
+        let mut out = words.get(0).unwrap_or(&"").to_string();
         out.push_str(&space_string(n - out.len()));
         out
     }
+}
+
+/// Returns the first words from `text_words` that can fit in `n` characters (counting for at least one space between each)
+/// and how many characters could not be filled (including the required space between words)
+/// 
+fn fit_words<'a>(text_words: &'a mut Peekable<SplitWhitespace>, n: usize) -> (Vec<&'a str>, usize) {
+    let mut remaining = n;
+    let mut spaces = 0;
+    let mut words = Vec::new();
+    while text_words.peek().is_some() && remaining > spaces && text_words.peek().unwrap().len() <= remaining - spaces {
+        let w = text_words.next().unwrap();
+        remaining -= w.len();
+        spaces += 1;
+        words.push(w)
+    }
+    
+    (words, remaining)
 }
 
 /// Push `x` spaces to the end of `s`
@@ -123,7 +129,37 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_write_justified() {
+    fn fitting() {
+        let mut iter = "test fit words 01234567123456"
+            .split_whitespace()
+            .peekable();
+        
+        assert_eq!(
+            fit_words(&mut iter, 6),
+            (vec!["test"], 2)
+        );
+
+        let mut iter = "test fit words 01234567123456"
+            .split_whitespace()
+            .peekable();
+        
+        assert_eq!(
+            fit_words(&mut iter, 8),
+            (vec!["test", "fit"], 1)
+        );
+
+        let mut iter = "test fit words 01234567123456"
+            .split_whitespace()
+            .peekable();
+        
+        assert_eq!(
+            fit_words(&mut iter, 40),
+            (vec!["test", "fit", "words", "01234567123456"], 40 - 26)
+        );
+    }
+
+    #[test]
+    fn justification() {
         let mut iter = "testing out the justified text fitter"
             .split_whitespace()
             .peekable();
