@@ -37,6 +37,7 @@ pub fn run(cfg: Conf) -> Result<(), Box<dyn Error>> {
     let mut output = String::new();
     let mut canwrite = 0;
 
+    // Iterate over shape characters writing as many words as possible in non-whitespace sequences
     for c in shape.chars() {
         if words.peek().is_none() {
             // Finished writing all words
@@ -67,13 +68,19 @@ pub fn run(cfg: Conf) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-/// Places as many words from `words` as possible within a `n` characters long String
-/// The words will be separated by at least one `' '`
-/// and if at least 2 words fit they will be aligned to both the `0` and `n-1` position
-/// with each word being spaced equally +- 1
+/// Places as many words from `words` as possible within a `n` characters long String filling with spaces
 /// 
-fn justify_in(text_words: &mut Peekable<SplitWhitespace>, n: usize) -> String {
-    let (words, remaining) = fit_words(text_words, n);
+/// If at least 2 words fit they will
+/// + be aligned to both the `0` and `n-1` position
+/// + have at least one `' '` between each word
+/// + have the same (+- 1) number of `' '` between each word
+/// 
+/// # Arguments
+/// 
+///  + `text_words` word source
+///  + `length` length of the string to create
+fn justify_in(text_words: &mut Peekable<SplitWhitespace>, length: usize) -> String {
+    let (words, remaining) = fit_words(text_words, length);
 
     if words.len() > 1 {
         // With 2 or more words we can justify
@@ -84,7 +91,7 @@ fn justify_in(text_words: &mut Peekable<SplitWhitespace>, n: usize) -> String {
 
         words.into_iter()
             .enumerate()
-            .fold(String::with_capacity(n), |mut s, (i, w)| {
+            .fold(String::with_capacity(length), |mut s, (i, w)| {
                 if i > 0 {
                     s.push_str(&space_string(div + if i <= rem { 1 } else { 0 }));
                 }
@@ -94,16 +101,15 @@ fn justify_in(text_words: &mut Peekable<SplitWhitespace>, n: usize) -> String {
     } else {
         // With 0 or 1 words we pad with spaces
         let mut out = words.get(0).unwrap_or(&"").to_string();
-        out.push_str(&space_string(n - out.len()));
+        out.push_str(&space_string(length - out.len()));
         out
     }
 }
 
-/// Returns the first words from `text_words` that can fit in `n` characters (counting for at least one space between each)
+/// Returns the first words from `text_words` that can fit in `length` characters (counting for at least one space between each)
 /// and how many characters could not be filled (including the required space between words)
-/// 
-fn fit_words<'a>(text_words: &'a mut Peekable<SplitWhitespace>, n: usize) -> (Vec<&'a str>, usize) {
-    let mut remaining = n;
+fn fit_words<'a>(text_words: &'a mut Peekable<SplitWhitespace>, length: usize) -> (Vec<&'a str>, usize) {
+    let mut remaining = length;
     let mut spaces = 0;
     let mut words = Vec::new();
     while text_words.peek().is_some() && remaining > spaces && text_words.peek().unwrap().len() <= remaining - spaces {
@@ -116,9 +122,9 @@ fn fit_words<'a>(text_words: &'a mut Peekable<SplitWhitespace>, n: usize) -> (Ve
     (words, remaining)
 }
 
-/// Push `x` spaces to the end of `s`
-fn space_string(x: usize) -> String {
-    (0..x).fold(String::with_capacity(x), |mut s, _| {
+/// Returns a string of spaces of `len` length
+fn space_string(len: usize) -> String {
+    (0..len).fold(String::with_capacity(len), |mut s, _| {
         s.push(' ');
         s
     })
