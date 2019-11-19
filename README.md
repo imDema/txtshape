@@ -1,6 +1,6 @@
 # txtshape
 
-Format text or code in the shape of an ascii art
+Format text or code in the shape of ascii art
 
 ## Usage
 
