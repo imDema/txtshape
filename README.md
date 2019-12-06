@@ -28,6 +28,8 @@ The ascii art is evaluated only with two levels, either something (any non-white
 
 > In the future I may decide to integrate an ascii art generator to use to generate the shape from an image
 
+## Example
+![Example](/example/Code_W4eQk99r1f.png)
 
 ### Notes
 
