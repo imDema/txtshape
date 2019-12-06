@@ -1,0 +1,73 @@
+                                                            Rust is a                                        
+                                                           multi-paradigm    system    programming            
+                                              language     focused   on  safety,  especially  safe             
+                                              concurrency.  Rust  is  syntactically  similar  to  C++,  but  is
+                                              designed  to  provide better memory safety while maintaining high            
+                                            performance.      Rust      was       originally  designed by Graydon Hoare   at
+                                 Mozilla Research, with contributions from         Dave  Herman,  Brendan  Eich, and others.
+                                  The designers refined the language while         writing  the  Servo  layout  or  browser
+                                  engine,  and  the  Rust compiler. The          compiler is  free and open-source software
+                      dual-licensed  under  the  MIT License          and        Apache          License  2.0.  Rust has been the "most
+                      loved  programming  language"  in                 the     Stack                 Overflow  Developer  Survey every
+                       year  since  2016.  Rust  is                                                       intended  to  be  a language
+                       for   highly  concurrent                                                               and highly safe systems,
+                       and   programming  in                                                                     the  large,  that is,
+                       creating        and                                                                         maintaining                 
+            boundaries   that   preserve                                                                             large-system integrity. This
+             has  led to a feature set                                                                                 with   an   emphasis   on
+              safety,  control  of  memory  layout,  and concurrency. Performance of idiomatic Rust                      Performance         of
+               idiomatic  Rust  is  comparable to the performance of idiomatic C++. The concrete syntax of                 Rust  is similar to
+                C and C++, with blocks of code delimited by curly brackets, and control flow keywords such as                if, else, while,
+               and for. Not all C or C++ keywords are implemented, however, and some Rust functions (such as the              use    of    the
+      keyword  match  for  pattern matching) will be less familiar to those versed in these languages. Despite the             superficial  resemblance
+     to  C  and  C++,  the  syntax of Rust in a deeper sense is closer to that of the ML family of languages and the             Haskell       language.
+      Nearly  every  part of a function body is an expression, even control flow operators. For example, the ordinary           if    expression   also
+        takes  the place of C's ternary conditional. A function need not end with a return expression: in this case if         the    semicolon    is
+         omitted,  the  last expression in the function creates the return value. Memory safety The system is designed        to be memory safe, and
+          it   does       not          permit  null  pointers,  dangling  pointers,  or  data races in safe code. Data       values      can   only
+       be                              initialized through a fixed                        set  of  forms, all of which                     require    
+  their  inputs to         be          already   initialized.   To                          replicate  the function in     other           languages     of
+ pointers     being       either       valid  or  NULL, such as in                          linked list or binary tree     data           structures,    the
+  Rust  core  library provides an      option  type,  which can be                         used  to test if a pointer      has  Some  value  or  None. Rust
+    also    introduces    added        syntax to manage lifetimes,                      and  the  compiler  reasons          about   these   through  its
+      borrow  checker. Rust            does  not use an automated garbage collection system like those used by Go,               Java,   or   the  .NET
+       Framework.                      Instead,  memory  and  other  resources  are managed through the resource                      acquisition   is
+     initialization                    (RAII)  convention,  with  optional  reference counting. Rust provides                           deterministic   
+  management       of                  resources, with very low overhead.[citation needed] Rust also favors                             stack allocation of
+values  and  does not                  perform  implicit boxing. There is also a concept of references (using                           the  & symbol), which
+do     not    involve                  run-time  reference  counting.  The  safety  of  using  such pointers is                         verified  at  compile
+  time  by the borrow                  checker,  preventing  dangling  pointers  and  other  forms  of  undefined                       behavior.  Rust has
+     an     ownership                  system  where  all values have a unique owner, where the scope of the value               is   the  same  as  the
+       scope  of  the                  owner. Values can be passed                   by  immutable  reference using              &T,     by    mutable
+      reference  using                 &mut T or by value using T.                     At   all  times,  there  can              either   be   multiple
+    immutable                          references  or  one mutable                       reference.     The     Rust             compiler  enforces these
+  rules at compile time                and  also  checks  that all                       references  are  valid. The            type   system   supports  a
+ mechanism  similar  to                type     classes,    called                        "traits",  inspired  directly      by  the  Haskell language. This
+  is  a facility for ad hoc polymorphism, achieved by adding constraints to type          variable  declarations.  Other  features  from  Haskell,  such as
+       higher-kinded  polymorphism,  are  not  yet supported. Rust features type           inference,  for  variables  declared  with the keyword let.
+          Such  variables  do  not  require  a value to be initially assigned to           determine  their  type.  A compile-time error results if
+         any  branch  of code fails to assign a value to the variable. Variables           assigned  multiple  times must be marked with the keyword
+        mut.  Functions  can  be given generic parameters, which usually require            the  generic type to implement a certain trait or traits.
+      Within  such  a function, the generic value can only be used through those             traits.   This  means  that  a  generic  function  can  be
+     type-checked  as  soon  as  it  is  defined.  This  is  in  contrast to C++              templates,  which  are fundamentally duck typed and cannot
+      be  checked  until  instantiated with concrete types. C++ concepts address               the  same  issue  and  are  expected to be part of C++20
+               (2020).  However,  the implementation of Rust generics is similar                  to   the   typical   implementation  of  C++
+                templates:      a                                                                                           separate  copy of
+               the      code     is                                                                                       generated  for  each
+              instantiation.  This is  called                                                                           monomorphization    and
+             contrasts  with the type erasure scheme                                                     typically used in Java and Haskell. The
+            benefit of monomorphization is optimized                                                    code  for  each  specific  use  case; the
+                       drawback       is                                                                            increased  compile    time 
+                       and  size of the                                                                              resulting        
+                       binaries.    The         object                                                 system         within  Rust  is
+                       based      around                                                                             implementations, 
+                      traits    and   structured   types.                                           Implementations   fulfill   a  role
+                      similar  to  that of classes within other                               languages,   and  are  defined  with  the
+                                  keyword     impl.     Inheritance     and       polymorphism are provided by traits; they
+                                  allow methods to be defined and mixed in to implementations. Structured types are used to
+                                 define  fields. Implementations and traits cannot define fields themselves, and only traits
+                                 can        provide  inheritance. Among other benefits, this prevents the diamond problem of
+                                              multiple  inheritance,  as  in C++. In other words, Rust supports            
+                                              interface  inheritance,  but  replaces implementation inheritance
+                                              with         composition;   see   composition   over             
+                                                           inheritance.                            
